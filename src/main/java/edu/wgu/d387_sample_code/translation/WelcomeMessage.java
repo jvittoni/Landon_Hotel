@@ -17,5 +17,7 @@ public class WelcomeMessage implements Runnable {
     }
 
     @Override
-    public void run() {}
+    public void run() {
+        System.out.println("Thread verification: " + getWelcomeMessage());
+    }
 }
