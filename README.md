@@ -1,29 +1,191 @@
-<strong> **DO NOT DISTRIBUTE OR PUBLICLY POST SOLUTIONS TO THESE LABS. MAKE ALL FORKS OF THIS REPOSITORY WITH SOLUTION CODE PRIVATE. PLEASE REFER TO THE STUDENT CODE OF CONDUCT AND ETHICAL EXPECTATIONS FOR COLLEGE OF INFORMATION TECHNOLOGY STUDENTS FOR SPECIFICS. ** </strong>
 
 # WESTERN GOVERNORS UNIVERSITY 
 ## D387 – ADVANCED JAVA
 Welcome to Advanced Java! This is an opportunity for students to write multithreaded object-oriented code using Java frameworks and determine how to deploy software applications using cloud services.
 
-FOR SPECIFIC TASK INSTRUCTIONS AND REQUIREMENTS FOR THIS ASSESSMENT, PLEASE REFER TO THE COURSE PAGE.
-## BASIC INSTRUCTIONS
-For this assessment, you will modify a Spring application with a Java back end and an Angular front end to include multithreaded language translation, a message at different time zones, and currency exchange. Then, build a Docker image of the current multithreaded Spring application and containerize it using the supporting documents provided in this task.
+<hr>
+
+## TRACKED CHANGES
+\\
 
 
-## SUPPLEMENTAL RESOURCES 
-1.	How to clone a project to IntelliJ using Git?
+### B.  Modify the Landon Hotel scheduling application for localization and internationalization by doing the following:
 
-> Ensure that you have Git installed on your system and that IntelliJ is installed using [Toolbox](https://www.jetbrains.com/toolbox-app/). Make sure that you are using version 2022.3.2. Once this has been confirmed, click the clone button and use the 'IntelliJ IDEA (HTTPS)' button. This will open IntelliJ with a prompt to clone the proejct. Save it in a safe location for the directory and press clone. IntelliJ will prompt you for your credentials. Enter in your WGU Credentials and the project will be cloned onto your local machine.  
+1. Install the Landon Hotel scheduling application in your integrated development environment (IDE). Modify the Java classes of application to display a welcome message by doing the following:
+    - a. Build resource bundles for both English and French (languages required by Canadian law). Include a welcome message in the language resource bundles.
+    - b. Display the welcome message in both English and French by applying the resource bundles using a different thread for each language.
 
-2. How to create a branch and start Development?
+    - _*Note: You may use Google Translate for the wording of your welcome message._
 
-- GitLab method
-> Press the '+' button located near your branch name. In the dropdown list, press the 'New branch' button. This will allow you to create a name for your branch. Once the branch has been named, you can select 'Create Branch' to push the branch to your repository.
 
-- IntelliJ method
-> In IntelliJ, Go to the 'Git' button on the top toolbar. Select the new branch option and create a name for the branch. Make sure checkout branch is selected and press create. You can now add a commit message and push the new branch to the local repo.
+2. Modify the front end to display the price for a reservation in currency rates for U.S. dollars ($), Canadian dollars (C$), and euros (€) on different lines.
 
-## SUPPORT
-If you need additional support, please navigate to the course page and reach out to your course instructor.
-## FUTURE USE
-Take this opportunity to create or add to a simple resume portfolio to highlight and showcase your work for future use in career search, experience, and education!
+    - _*Note: It is not necessary to convert the values of the prices._
 
+
+3. Display the time for an online live presentation held at the Landon Hotel by doing the following:
+    - a. Write a Java method to convert times between eastern time (ET), mountain time (MT), and coordinated universal time (UTC) zones.
+    - b. Use the time zone conversion method from part B3a to display a message stating the time in all three time zones in hours and minutes for an online, live presentation held at the Landon Hotel. The times should be displayed as ET, MT, and UTC.
+
+
+<br>
+
+### Part B1:
+
+<br>
+File Name: translation.properties, translation_en_US.properties, translation_fr_CA.properties
+<br>Edit: Created Resource Bundle for english and french
+
+
+<br>
+
+File Name: translation_en_US.properties
+<br>Line: 1
+<br>Edit: Added welcome message in English
+<br>Code:
+```
+welcome=Welcome to the Landon Hotel!
+```
+
+<br>
+
+File Name:  translation_fr_CA.properties
+<br>Line: 1
+<br>Edit: Added welcome message in French
+<br>Code:
+```
+welcome=Bienvenue à l'hôtel Landon!
+```
+
+<br>
+
+File Name: WelcomeMessage.java
+<br>Line: 1 - 21
+<br>Edit: Created file and created class for welcome messages
+<br>Code:
+```
+package edu.wgu.d387_sample_code.translation;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+public class WelcomeMessage implements Runnable {
+    Locale locale;
+
+    //Constructor
+    public WelcomeMessage(Locale locale) {
+        this.locale = locale;
+    }
+
+    public String getWelcomeMessage() {
+        ResourceBundle bundle = ResourceBundle.getBundle("translation", locale);
+        return bundle.getString("welcome");
+    }
+
+    @Override
+    public void run() {}
+}
+```
+
+<br>
+
+File Name: WelcomeMessageController.java
+<br>Line: 1 - 25
+<br>Edit: Created file and created controller for welcome messages
+<br>Code:
+```
+package edu.wgu.d387_sample_code.translation;
+
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Locale;
+
+@CrossOrigin(origins = "http://localhost:4200")
+@RestController
+
+public class WelcomeMessageController {
+
+    @GetMapping("/welcome")
+    public ResponseEntity<String> displayWelcome(@RequestParam("lang") String lang) {
+        Locale locale = Locale.forLanguageTag(lang);
+        WelcomeMessage welcomeMessage = new WelcomeMessage(locale);
+
+        return new ResponseEntity<String> (welcomeMessage.getWelcomeMessage(), HttpStatus.OK);
+    }
+}
+```
+
+<br>
+
+File Name: WelcomeMesssge.java
+<br>Line: 21
+<br>Edit: Added thread verification for welcome messages
+<br>Code:
+```
+@Override
+    public void run() {
+        System.out.println("Thread verification: " + getWelcomeMessage());
+    }
+```
+
+<br>
+
+File Name: D387SampleCodeApplication.java
+<br>Line: 18 - 26
+<br>Edit: Created threads for welcome messages
+<br>Code:
+```
+// Thread For English Welcome Message
+		WelcomeMessage welcomeMessageEnglish = new WelcomeMessage(Locale.US);
+		Thread englishWelcomeThread = new Thread(welcomeMessageEnglish);
+		englishWelcomeThread.start();
+
+		// Thread For French Welcome Message
+		WelcomeMessage welcomeMessageFrench = new WelcomeMessage(Locale.CANADA_FRENCH);
+		Thread frenchWelcomeThread = new Thread(welcomeMessageFrench);
+		frenchWelcomeThread.start();
+
+```
+
+<br>
+
+File Name: app.component.ts
+<br>Line: 19 - 20, 37 - 39
+<br>Edit: Created http request to show welcome messages
+<br>Code:
+```
+// Welcome messages
+  welcomeMessageEnglish$!: Observable<string>
+  welcomeMessageFrench$!: Observable<string>
+…
+// Welcome Messages HTTP request
+      this.welcomeMessageEnglish$ = this.httpClient.get(this.baseURL + '/welcome?lang=en-US', {responseType: 'text'})
+      this.welcomeMessageFrench$ = this.httpClient.get(this.baseURL + '/welcome?lang=fr-CA', {responseType: 'text'})
+```
+
+<br>
+
+File Name: app.component.html
+<br>Line: 25 - 30
+<br>Edit: Called in welcome messages to show on the hotel page
+<br>Code:
+```
+<div>
+      <br>
+      <h1>{{welcomeMessageEnglish$ | async}}</h1>
+      <h1>{{welcomeMessageFrench$ | async}}</h1>
+      <br>
+    </div>
+```
+
+<br>
+
+<hr>
+
+<br>
