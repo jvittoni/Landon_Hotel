@@ -186,6 +186,41 @@ File Name: app.component.html
 
 <br>
 
+### Part B2:
+
+<br>
+File Name: app.component.ts
+<br>Line: 64, 115 - 119
+<br>Edit: Added Canadian dollar and Euro room reservation prices
+<br>Code:
+
+```
+this.rooms.forEach( room => { room.priceCAD = room.price; room.priceEUR = room.price})
+…
+  // Canadian Dollar 
+  priceCAD:string;
+
+// Euro
+priceEUR:string;
+```
+
+<br>
+
+File Name: app.component.html
+<br>Line: 84 - 85
+<br>Edit: Display Canadian dollar and euro prices on hotel page
+<br>Code: 
+```
+<strong>Price: C${{room.priceCAD}}</strong><br>
+<strong>Price: €{{room.priceEUR}}</strong>
+```
+
+
+<br>
+
+
+<br>
+
 <hr>
 
 <br>
