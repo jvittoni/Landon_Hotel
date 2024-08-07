@@ -219,6 +219,94 @@ File Name: app.component.html
 <br>
 
 
+### Part B3:
+
+<br>
+File Name: TimeZoneConvert.java
+<br>Line: 1 - 23
+<br>Edit: Created file and created java method to convert times with ET, MT, and UTC time zones
+<br>Code:
+
+```
+package edu.wgu.d387_sample_code.time;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+
+@CrossOrigin(origins = "http://localhost:4200")```
+
+public class TimeZoneConvert {
+   public static String getTime(){
+        ZonedDateTime zdt = ZonedDateTime.now();
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        
+         ZonedDateTime et = zdt.withZoneSameInstant(ZoneId.of("America/New_York"));
+        ZonedDateTime mt = zdt.withZoneSameInstant(ZoneId.of("America/Denver"));
+        ZonedDateTime utc = zdt.withZoneSameInstant(ZoneId.of("UCT"));
+        
+   String times = et.format(timeFormatter) + "ET, " + mt.format(timeFormatter) + "MT, " + utc.format(timeFormatter) + "UTC";
+        
+   return times;
+    }
+}
+```
+
+
+<br>
+
+File Name: TimeZoneConvertController.java
+<br>Line: 
+<br>Edit: Created file and created controller to use time zone converter in the presentation message
+<br>Code: 
+```
+package edu.wgu.d387_sample_code.time;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@CrossOrigin(origins = "http://localhost:4200")
+
+public class TimeZoneConvertController {
+   @GetMapping("/presentation")
+   public ResponseEntity<String> presentationAnnouncement() {
+   String displayAnnouncement = "The Landon Hotel is hosting a live, online presentation at " + TimeZoneConvert.getTime();
+   return new ResponseEntity<String>(displayAnnouncement, HttpStatus.OK);
+   }
+}
+```
+
+<br>
+
+File Name: app.component.ts
+<br>Line: 23, 45
+<br>Edit: Created http request for presentation message with time zones
+<br>Code: 
+```
+presentationAnnouncement$!: Observable<String>
+…
+this.presentationAnnouncement$ = this.httpClient.get(this.baseURL + '/presentation', {responseType: 'text'})
+```
+
+<br>
+
+File Name: app.component.html
+<br>Line: 32 - 36
+<br>Edit: Display presentation message with et, mt, and utc on the site
+<br>Code: 
+```
+<div class="scene" id="presentation">
+        <h2>Announcement:</h2>
+        <h1>{{presentationAnnouncement$ | async}}</h1>
+        <br>
+      </div>
+```
+
 <br>
 
 <hr>
