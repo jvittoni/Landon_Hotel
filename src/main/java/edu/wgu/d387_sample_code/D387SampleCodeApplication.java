@@ -1,5 +1,6 @@
 package edu.wgu.d387_sample_code;
 
+import edu.wgu.d387_sample_code.time.TimeZoneConvert;
 import edu.wgu.d387_sample_code.translation.WelcomeMessage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -24,5 +25,8 @@ public class D387SampleCodeApplication {
 		WelcomeMessage welcomeMessageFrench = new WelcomeMessage(Locale.CANADA_FRENCH);
 		Thread frenchWelcomeThread = new Thread(welcomeMessageFrench);
 		frenchWelcomeThread.start();
+
+		// Print Time Convert
+		System.out.println("Time Zones: " + TimeZoneConvert.getTime());
 	}
 }
