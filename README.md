@@ -312,3 +312,51 @@ File Name: app.component.html
 <hr>
 
 <br>
+
+### C.  Explain how you would deploy the Spring application with a Java back end and an Angular front end to cloud services and create a Dockerfile using the attached supporting document "How to Create a Docker Account" by doing the following:
+
+1. Build the Dockerfile to create a single image that includes all code, including modifications made in parts B1 to B3. Commit and push the final Dockerfile to GitLab.
+
+2. Test the Dockerfile by doing the following:
+- a. Create a Docker image of the current multithreaded Spring application.
+- b. Run the Docker image in a container and give the container a name that includes D387_[student ID].
+- c. Submit a screenshot capture of the running application with evidence it is running in the container.
+
+3. Describe how you would deploy the current multithreaded Spring application to the cloud. Include the name of the cloud service provider you would use.
+
+- *Note: Remember to commit and push your changes to GitLab.
+
+<br>
+
+### Part C1:
+
+<br>
+
+File Name: Dockerfile
+<br>Line: 1 - 9
+<br>Edit: Created docker file and docker image
+<br>Code:
+```
+FROM openjdk
+
+COPY target/D387_sample_code-0.0.2-SNAPSHOT.jar app.jar
+
+WORKDIR /app
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "/app.jar"]
+
+```
+
+<br>
+
+### Part C2:
+
+<br>
+
+File Name: dockerContainerScreenshot_1.png, dockerContainerScreenshot_2.png
+<br>Edit: Added screenshots of docker image in a container
+
+
+<br>
